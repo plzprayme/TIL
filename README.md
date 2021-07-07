@@ -7,16 +7,11 @@ TIL을 하면서 메모, 기록을 습관화하고 글쓰기 능력도 향상시
 목표는 취업하기 전까지 지속하는 것을 목표로 한다.
 
 
-_2 TILs and counting..._
+_0 TILs and counting..._
 
 ---
 
 ### Categories
 
-- [Java](#Java)
-
-### [Java](#Java)
-- [Queue](Java/Queue.md)
-- [Stack](Java/Stack.md)
 
 
