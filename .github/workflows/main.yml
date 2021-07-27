@@ -27,6 +27,8 @@ jobs:
         with:
           # necessary for github-action-til-autoformat-readme
           fetch-depth: 0
+          
+      - run: ls
     
       - name: TIL Auto-Format README
         uses: cflynn07/github-action-til-autoformat-readme@1.2.0
@@ -36,3 +38,5 @@ jobs:
             여러 활동을 하며 메모,기록의 중요성을 알게 되었다. 
             TIL을 하면서 메모, 기록을 습관화하고 글쓰기 능력도 향상시켜보자.
             목표는 취업하기 전까지 지속하는 것을 목표로 한다.
+            
+      - run: ls
