@@ -7,11 +7,15 @@ TIL을 하면서 메모, 기록을 습관화하고 글쓰기 능력도 향상시
 목표는 취업하기 전까지 지속하는 것을 목표로 한다.
 
 
-_0 TILs and counting..._
+_1 TILs and counting..._
 
 ---
 
 ### Categories
 
+- [git](#git)
+
+### [git](#git)
+- [10.1 Git의 내부 - Plumbing 명령과 Porcelain 명령](git/git_internal.md)
 
 
