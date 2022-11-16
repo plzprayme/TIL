@@ -7,7 +7,7 @@ TIL을 하면서 메모, 기록을 습관화하고 글쓰기 능력도 향상시
 목표는 취업하기 전까지 지속하는 것을 목표로 한다.
 
 
-_3 TILs and counting..._
+_4 TILs and counting..._
 
 ---
 
@@ -22,5 +22,6 @@ _3 TILs and counting..._
 ### [vue](#vue)
 - [ref: https://vuejs.org/guide/essentials/computed.html](vue/computed_properties.md)
 - [ref: [https://vuex.vuejs.org/guide/getters.html](https://v3.vuex.vuejs.org/).](vue/vuex.md)
+- [ref: https://vuex.vuejs.org/guide/getters.html](vue/vuex_getters.md)
 
 
