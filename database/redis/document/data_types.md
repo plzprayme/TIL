@@ -377,3 +377,113 @@ stream ID는 짧고 고정 길이이다. 이렇게 설계되어서 효율적으�
 ### Basic commands
 * GEOADD: geospatial index 지역 추가 (lng, lat 순서로)
 * GEOSEARCH: redius, boundbox 기준 탐색
+
+## HyperLogLog
+set의 cardinality 를 계산하는 데이터 구조이다. 확률론적 데이터 구조로서 공간과 정확도의 트레이드 오프가 있다. 12KB HyperLogLog 구현은 0.81% 의 standard error를 제공한다.  
+
+### Examples
+* ADD
+```shell
+> PFADD members 123
+(integer) 1
+> PFADD members 500
+(integer) 1
+> PFADD members 12
+(integer) 1
+```
+
+* member 수 계산
+```shell
+> PFCOUNT members
+(integer) 3
+```
+
+### Basic commands
+* PFADD: ADD item
+* PFCOUNT: item 숫자 계산
+* PFMERGE: 두개 이상의 HyperLogLog를 하나로 병합
+
+### Peformance
+상수 시간/공간복잡도: PFADD, PFCOUNT
+O(n): PFMERGE
+
+### Limits
+2^64 members 까지 계산 가능
+
+## Bitmaps
+String을 bit vector 처럼 다룰 수 있게 String 확장 데이터 구조이다. bitwise 명령어도 사용할 수 있다. 
+
+* member가 0 이상의 정수인 set을 표현할 때 유용하다.
+* permission 을 표현할 때 유용하다. 예를들어 파일 시스템에서 사용 권한을 지정하는 것.
+
+### Examples
+0 ~ 999 까지의 센서가 필드로 존재한다고 가정한다.  
+server에 ping 요청을 보낸 센서를 빠르게 탐색해야 하는 상황이라고 하자
+
+* ADD test data
+```shell
+> SETBIT pings:2024-01-01-00:00 123 1
+(integer) 0
+```
+
+* 조회
+```shell
+> GETBIT pings:2024-01-04-00:00 123
+1
+> GETBIT pings:2024-01-04-00:00 456
+0
+```
+
+### Basic commands
+* SETBIT: set 0 or 1
+* GETBIT: return value
+* BITOP: bitwise 연산
+
+### Performance
+BITOP: O(n)
+SETBIT, GETBIT: O(1)
+
+## Bitfields
+임의의 길이를 가진 bit에 대해서 set, increment, get integer 연산을 지원하는 데이터 구조이다. unsigned 1-bit ~ signed 63-bit 정수에 대해서 연산을 할 수 있다.  
+
+
+binary-encoded Redis string 을 사용하여 value를 저장한다.  
+atomic read, write, increment 연산을 제공한다.  
+counter를 관리하거나 숫자를 관리할 때 좋은 선택지이다.  
+
+### Examples
+온라인 게임 안에서의 활동을 추적한다고 가정하자.  
+각 플레이어들의 골드와 몬스터 처치 수. 두 개의 메트릭을 유지한다.    
+
+* 새로운 유저가 1000 골드와 튜토리얼을 시작한다.
+```shell
+> BITFIELD player:1:stats SET u32 #0 1000
+1) (integer) 0
+```
+
+* 고블린 처치 후 50골드를 얻었고 몬스터 처치 수를 1 증가시킨다.
+```shell
+> BITFIELD player:1:stats INCRBY u32 #0 50 INCRBY u32 #1 1
+1) (integer) 1050
+2) (integer) 1
+```
+
+* 999 골드로 대거를 구매
+```shell
+> BITFIELD player:1:stats INCRBY u32 #0 -999
+1) (integer) 51
+```
+
+* 유저 상태 조회
+```shell
+> BITFIELD player:1:stats GET u32 #0 GET u32 #1
+1) (integer) 51
+2) (integer) 1
+```
+
+### Basic commands
+* BITFIELD: atomically set, increment, read 
+* BITFIELD_RO: read-only
+
+### Performance
+O(N) number of counter: n
