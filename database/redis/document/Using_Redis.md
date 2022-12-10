@@ -186,3 +186,24 @@ MULTI
 INCR a b c
 -ERR wrong number of arguments for 'incr' command
 ```
+
+이 예제는 INCR 단일 명령어이기 때문에 큐잉되지 않는다.
+
+### What about rollbacks
+Redis는 rollback을 지원하지 않는다.
+
+### 트랜잭션 중단
+트랜잭션을 시작하고 DISCARD 명령어로 중단할 수 있다.
+
+```shell
+> SET foo 1
+OK
+> MULTI
+OK
+> INCR foo
+QUEUED
+> DISCARD
+OK
+> GET foo
+"1"
+```
