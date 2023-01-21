@@ -29,3 +29,44 @@ List<Object> txResults = redisTemplate.execute(new SessionCallback<List<Object>>
 만약 옵션을 활성화하면 현재 트랜잭션의 RedisConnection 이 `ThreadLocal` 에 바인딩된다.  
 만약 오류없이 트랜잭션이 끝나면 EXEC 메서드가 호출되는 것과 같고 에러가 발생했다면 DISCARD 가 호출된 것과 같을 것이다.
 
+## Redis Cache
+일단 `RedisCacheManager`을 빈으로 등록해줘야한다.  
+```java
+@Bean
+public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
+    return RedisCacheManager.create(connectionFactory);
+}
+```
+`RedisCacheManageBuilder` 로도 생성할 수 있다.
+```java
+RedisCacheManager cm = RedisCacheManager.builder(connectionFactory)
+    .cacheDefaults(defaultCacheConfig())
+    .withInitialCacheConfigurations(singletonMap("prodefined", defaultCacheConfig().disableCachingNullValues()))
+    .transactionAware()
+    .build();
+```
+
+`RedisCacheConfiguration`도 정의해주자. 여기서 TTL, prefix, RedisSerializer 구현체를 설정할 수 있다.  
+```java
+RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
+    .entryTtl(Duration.ofSeconds(1))
+    .disableCachingNullValues();
+```
+기본적으로는 read/write 연산에 lock 을 걸지 않는데 걸고 싶다면 ..
+```java
+RedisCacheManager cm = RedisCacheManager.build(RedisCacheWriter.lockingRedisCacheWriter(connectionFactory))
+	.cacheDefaults(defaultCacheConfig())
+	...
+```
+
+
+기본적으로 저장할 때 `prefix::key` 로 저장된다. 이걸 수정할 수 있다
+```java
+// static key prefix
+RedisCacheConfiguration.defaultCacheConfig().prefixKeysWith("( ͡° ᴥ ͡°)"); // prefix가 이걸로 바뀜
+
+The following example shows how to set a computed prefix:
+
+// computed key prefix
+RedisCacheConfiguration.defaultCacheConfig().computePrefixWith(cacheName -> "¯\_(ツ)_/¯" + cacheName); // 기존 prefix가 cacheName 으로 들어옴.
+```
