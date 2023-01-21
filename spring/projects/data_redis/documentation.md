@@ -26,7 +26,6 @@ List<Object> txResults = redisTemplate.execute(new SessionCallback<List<Object>>
 
 #### @Transactional Support
 기본적으로는 지원안해준다. 만약 사용하고 싶다면 RedisTemplate 에 setEnableTransactionSupport(true)를 설정해야한다.  
-만약 옵션을 
-활성화하면 
-
+만약 옵션을 활성화하면 현재 트랜잭션의 RedisConnection 이 `ThreadLocal` 에 바인딩된다.  
+만약 오류없이 트랜잭션이 끝나면 EXEC 메서드가 호출되는 것과 같고 에러가 발생했다면 DISCARD 가 호출된 것과 같을 것이다.
 
