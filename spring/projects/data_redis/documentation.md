@@ -22,7 +22,7 @@ List<Object> txResults = redisTemplate.execute(new SessionCallback<List<Object>>
     return operations.exec();
   }
 });
-
+```
 
 #### @Transactional Support
 기본적으로는 지원안해준다. 만약 사용하고 싶다면 RedisTemplate 에 setEnableTransactionSupport(true)를 설정해야한다.  
@@ -37,7 +37,9 @@ public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) 
     return RedisCacheManager.create(connectionFactory);
 }
 ```
+
 `RedisCacheManageBuilder` 로도 생성할 수 있다.
+
 ```java
 RedisCacheManager cm = RedisCacheManager.builder(connectionFactory)
     .cacheDefaults(defaultCacheConfig())
@@ -47,12 +49,15 @@ RedisCacheManager cm = RedisCacheManager.builder(connectionFactory)
 ```
 
 `RedisCacheConfiguration`도 정의해주자. 여기서 TTL, prefix, RedisSerializer 구현체를 설정할 수 있다.  
+
 ```java
 RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
     .entryTtl(Duration.ofSeconds(1))
     .disableCachingNullValues();
 ```
+
 기본적으로는 read/write 연산에 lock 을 걸지 않는데 걸고 싶다면 ..
+
 ```java
 RedisCacheManager cm = RedisCacheManager.build(RedisCacheWriter.lockingRedisCacheWriter(connectionFactory))
 	.cacheDefaults(defaultCacheConfig())
