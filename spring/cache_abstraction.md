@@ -83,4 +83,10 @@ Optional 도 지원한다.
 CacheEvict 는 메서드 리턴 값에 따른 동작이 없다. 
 `@CacheEvict(cacheNames="books", allEntries=true)`
 
-### Caching
+### Caching Annotation
+가끔 여러 애너테이션을 사용해야할 때도 있다. 예를들어서 `@CacheEvict` or `@CachePut` 를 동시에 써야할 때가 있다.
+
+`@Caching(evict = { @CacheEvict("primary"), @CacheEvict(cacheNames="secondary", key="#p0") })`
+
+### CacheConfig annotation
+
